@@ -1,0 +1,167 @@
+\documentclass[a5paper, 10pt]{book}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,ngerman]{babel}
+\usepackage{verbatim}
+\usepackage[a5paper]{geometry}
+\usepackage{scrextend}
+\usepackage{parskip}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{titling}
+\usepackage{marginnote}
+\usepackage[contents={},opacity=0.5,scale=1,angle=90]{background}
+\usepackage{tikz}
+
+
+
+
+%----- definitions -------------------------------------------------------------
+
+\definecolor{gray}{rgb}{0.3,0.3,0.3}
+\definecolor{contrast}{rgb}{0.0,0.45,0.75}
+
+\newcommand*\VerBar[2]{%
+{\color{#1}\rule{#2}{1px}}}
+
+\newif\ifBgUse
+
+\AddEverypageHook{%
+\ifBgUse%
+\ifodd\value{page}
+\backgroundsetup{position={current page.north east},vshift=3.5cm,%
+contents={\VerBar{black}{2\paperheight}}}%
+\else
+\backgroundsetup{position={current page.north west},vshift=-3.5cm,%
+contents={\VerBar{black}{2\paperheight}}}%
+\fi%
+\BgMaterial%
+\fi}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=0.2pt] (char) {#1};}}
+
+\renewcommand\maketitle[0]{
+% title
+\begin{center}
+	\fontsize{20pt}{20pt}\selectfont
+	\textbf{\thetitle}
+\end{center}
+\begin{center}
+	% name and date
+	\vspace{1.25em}
+	\fontsize{10pt}{10pt}\selectfont
+	\theauthor \hspace{0.5cm} - \hspace{0.5cm} \thedate
+\end{center}
+
+%reset formatting
+\fontsize{11pt}{11pt}\selectfont
+
+\tableofcontents
+}
+
+\renewcommand\cite[1]{\iflanguage{ngerman}{(vgl. #1)}{(#1)}}
+
+\renewcommand\quote[2]{\iflanguage{ngerman}{>>#2<< (#1)}{>>#1<< (#2)}}
+
+\newcommand{\hl}[1]{\textbf{\textcolor{contrast}{#1}}}
+
+\newcounter{mn}
+\newcommand\mpar[1]{\refstepcounter{mparcnt}\marginpar{\themparcnt#1}}
+
+\newcommand{\mnote}[1]{\refstepcounter{mn}\textsuperscript{\fontsize{6pt}{6pt}\selectfont\circled{\arabic{mn}}}\marginpar{\raggedright\fontsize{8pt}{8pt}\selectfont \textbf{\arabic{mn}:} \textcolor{gray}{#1}}}
+
+\urlstyle{same}
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
+  \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
+  \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
+  \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
+  \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
+  \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
+  \do\Y\do\Z}
+
+
+\renewcommand{\arraystretch}{2}
+\renewcommand{\paragraph}[1]{\mbox{}\\ \textbf{#1:} \hspace{0.15em}}
+
+%----- definitions -------------------------------------------------------------
+
+%----- language settings -------------------------------------------------------
+
+\selectlanguage{english}
+
+%----- language settings -------------------------------------------------------
+
+%----- document information ----------------------------------------------------
+
+\title{TITLE}
+\author{NAME}
+\date{DATE}
+
+%----- document information ----------------------------------------------------
+
+
+\begin{document}
+    %----- document settings ---------------------------------------------------
+
+    %set text alignment
+	%default = justified
+    %set line height
+    \linespread{1}
+	%graphicspath
+	\graphicspath{ {./img/} }
+	%format page
+	\newgeometry{left = 2cm, right = 2cm, marginparwidth = 0cm, marginparsep = 0cm}
+	%format numbering
+	\pagenumbering{gobble}
+
+    %----- document settings ---------------------------------------------------
+
+	\BgUsefalse
+    %----- title ---------------------------------------------------------------
+
+    \maketitle
+
+    %----- title ---------------------------------------------------------------
+
+    %----- content -------------------------------------------------------------
+
+	\newgeometry{inner = 1.5cm, outer = 4cm, marginparwidth = 2.5cm, marginparsep = 1cm}
+	\pagenumbering{arabic}
+	\chapter{Chapter}
+	\BgUsetrue
+
+	\paragraph{Paragraph} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+	\paragraph{Paragraph} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+	\section{Section}
+
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\mnote{Hallo hier ist eine Randnote ! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.} consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+	\section{Section}
+
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+	\subsection{Subsection}
+
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+	\subsection{Subsection}
+
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+	\chapter{Chapter}
+
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+
+
+
+
+    %----- content -------------------------------------------------------------
+
+\end{document}
