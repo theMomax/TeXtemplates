@@ -12,7 +12,7 @@
 \usepackage{xcolor}
 \usepackage{titling}
 \usepackage{marginnote}
-\usepackage[contents={},opacity=0.5,scale=1,angle=90]{background}
+\usepackage[contents={},opacity=0.15,scale=1,angle=90]{background}
 \usepackage{tikz}
 
 
@@ -21,21 +21,21 @@
 %----- definitions -------------------------------------------------------------
 
 \definecolor{gray}{rgb}{0.3,0.3,0.3}
-\definecolor{contrast}{rgb}{0.0,0.45,0.75}
+\definecolor{contrast}{rgb}{0.0,0.70,0.90}
 
 \newcommand*\VerBar[2]{%
-{\color{#1}\rule{#2}{3cm}}}
+{\color{#1}\rule{#2}{4.25cm}}}
 
 \newif\ifBgUse
 
 \AddEverypageHook{%
 \ifBgUse%
 \ifodd\value{page}
-\backgroundsetup{position={current page.north east},vshift=3.5cm,%
-contents={\VerBar{black}{2\paperheight}}}%
+\backgroundsetup{position={current page.north east},vshift=1.5cm,%
+contents={\VerBar{gray}{2\paperheight}}}%
 \else
-\backgroundsetup{position={current page.north west},vshift=-3.5cm,%
-contents={\VerBar{black}{2\paperheight}}}%
+\backgroundsetup{position={current page.north west},vshift=-1.5cm,%
+contents={\VerBar{gray}{2\paperheight}}}%
 \fi%
 \BgMaterial%
 \fi}
@@ -44,17 +44,8 @@ contents={\VerBar{black}{2\paperheight}}}%
             \node[shape=circle,draw,inner sep=0.2pt] (char) {#1};}}
 
 \renewcommand\maketitle[0]{
-% title
-\begin{center}
-	\fontsize{20pt}{20pt}\selectfont
-	\textbf{\thetitle}
-\end{center}
-\begin{center}
-	% name and date
-	\vspace{1.25em}
-	\fontsize{10pt}{10pt}\selectfont
-	\theauthor \hspace{0.5cm} - \hspace{0.5cm} \thedate
-\end{center}
+% titlepage
+\input{tex/title}
 
 %reset formatting
 \fontsize{11pt}{11pt}\selectfont
@@ -71,7 +62,7 @@ contents={\VerBar{black}{2\paperheight}}}%
 \newcounter{mn}
 \newcommand\mpar[1]{\refstepcounter{mparcnt}\marginpar{\themparcnt#1}}
 
-\newcommand{\mnote}[1]{\refstepcounter{mn}\textsuperscript{\fontsize{6pt}{6pt}\selectfont\circled{\arabic{mn}}}\marginpar{\raggedright\fontsize{8pt}{8pt}\selectfont \textbf{\arabic{mn}:} \textcolor{gray}{#1}}}
+\newcommand{\mnote}[1]{\refstepcounter{mn}\textsuperscript{\fontsize{6pt}{6pt}\selectfont\circled{\arabic{mn}}}\marginpar{\raggedright\fontsize{8pt}{8pt}\selectfont \textbf{\arabic{mn}:} \textcolor{contrast}{#1}}}
 
 \urlstyle{same}
 \expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
@@ -117,18 +108,20 @@ contents={\VerBar{black}{2\paperheight}}}%
 	%format numbering
 	\pagenumbering{gobble}
 
+	\renewcommand*\rmdefault{iwona}
+
     %----- document settings ---------------------------------------------------
 
 	\BgUsefalse
     %----- title ---------------------------------------------------------------
 
-    \maketitle
+	\maketitle
 
     %----- title ---------------------------------------------------------------
 
     %----- content -------------------------------------------------------------
 
-	\newgeometry{inner = 1.5cm, outer = 4cm, marginparwidth = 3cm, marginparsep = 0.5cm}
+	\newgeometry{inner = 1.5cm, outer = 4cm, marginparwidth = 2.75cm, marginparsep = 0.75cm}
 	\pagenumbering{arabic}
 	\chapter{Chapter}
 	\BgUsetrue
@@ -155,7 +148,7 @@ contents={\VerBar{black}{2\paperheight}}}%
 
 	\chapter{Chapter}
 
-	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea\mnote{Dies ist eine Randnote.} commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
 
