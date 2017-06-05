@@ -12,8 +12,11 @@
 \usepackage{xcolor}
 \usepackage{titling}
 \usepackage{marginnote}
-\usepackage[contents={},opacity=0.15,scale=1,angle=90]{background}
+\usepackage[contents={},opacity=1,scale=1,angle=90]{background}
 \usepackage{tikz}
+\usepackage{tgadventor}
+\usepackage{fancyhdr}
+\usepackage{setspace}
 \usepackage{style}
 
 \begin{document}
@@ -39,15 +42,21 @@
 	%----- document information ----------------------------------------------------
 
 	\title{TITLE}
+	\def \subtitle {SUBTITLE}
 	\author{NAME}
 	\date{DATE}
 
 	%----- document information ----------------------------------------------------
-
 	\BgUsefalse
     %----- title ---------------------------------------------------------------
+	\BgFtrue
 
 	\maketitle
+
+	\BgFfalse
+
+	\tableofcontents
+	\listoffigures
 
     %----- title ---------------------------------------------------------------
 
