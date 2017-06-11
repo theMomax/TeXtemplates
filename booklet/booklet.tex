@@ -1,4 +1,5 @@
 \documentclass[a5paper, 10pt]{book}
+\usepackage{listings}
 \usepackage{ucs}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -19,6 +20,26 @@
 \usepackage{setspace}
 \usepackage{palatino}
 \usepackage{style}
+
+\lstset {
+    xleftmargin=10px,
+    breaklines=true,
+    basicstyle=\fontfamily{pcr}\selectfont\linespread{5}\scriptsize\color{black},
+    keywordstyle=\color{black}\bfseries,
+    numbers=left,
+    numberstyle=\tiny,
+    backgroundcolor=\color{background},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=l,
+    framesep=4.5mm,
+    framexleftmargin=-0.5em,
+    fillcolor=\color{background},
+    rulecolor=\color{background},
+    numberstyle=\normalfont\tiny\color{black},
+    numbersep=0px
+}
 
 \begin{document}
     %----- document settings ---------------------------------------------------
@@ -73,6 +94,7 @@
 	\BgUsetrue
 
 	\paragraph{Paragraph} Lorem ipsum dolor sit amet, \hl{consectetur} adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 
 	\paragraph{Paragraph} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 

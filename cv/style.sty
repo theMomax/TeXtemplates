@@ -1,0 +1,44 @@
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{blue}{rgb}{0.32,0.43,0.74}
+
+
+\renewcommand\maketitle[0]{
+% title
+\begin{center}
+	\fontsize{20pt}{20pt}\selectfont
+	\textbf{\thetitle}
+\end{center}
+\begin{center}
+	% name and date
+	\vspace{1.25em}
+	\fontsize{10pt}{10pt}\selectfont
+	\theauthor \hspace{0.5cm} - \hspace{0.5cm} \thedate
+\end{center}
+
+%reset formatting
+\fontsize{11pt}{11pt}\selectfont
+\vspace{2em}
+}
+
+\urlstyle{same}
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%  save the current one
+  \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
+  \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
+  \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
+  \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
+  \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
+  \do\Y\do\Z}
+
+\renewcommand{\arraystretch}{2}
+
+\newcommand{\before}[1]{\reversemarginpar \marginpar{\raggedleft #1}}
+\newcommand{\cvnote}[1]{\before{\textcolor{gray}{#1}}}
+
+\renewcommand{\sectionmark}[0]{\before{\textcolor{blue}{\rule{25mm}{5pt}}}}
+
+\renewcommand{\section}[1]{\mbox{}\newline\textcolor{blue}{\fontsize{14pt}{14pt}\selectfont #1} \sectionmark}
+\renewcommand{\subsection}[1]{\textcolor{blue}{#1}}
+
+\newcommand{\cvitem}[3]{\mbox{} \hspace{-1ex} \cvnote{#1} #3 \ifx&#2&\else\textcolor{gray}{ \hspace{1ex}\rule[0.5ex]{2.5mm}{0.8px} \hspace{1ex} #2}\fi}
+
+\newcommand{\cvscale}[2]{\mbox{} \newline \cvnote{#1} \vspace{-1ex} \hspace{-1ex} \textcolor{gray}{\rule[0.5ex]{\dimexpr #2\textwidth - 0.2\textwidth \relax}{1px} \hspace{-1.5ex} \textcolor{blue}{{\fontsize{16pt}{16pt}\selectfont \raisebox{-1pt}{$\bullet$}} \hspace{1ex} good\\}}}
