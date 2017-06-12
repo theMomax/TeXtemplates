@@ -1,23 +1,18 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{blue}{rgb}{0.32,0.43,0.74}
 
-
 \renewcommand\maketitle[0]{
-% title
-\begin{center}
-	\fontsize{20pt}{20pt}\selectfont
-	\textbf{\thetitle}
-\end{center}
-\begin{center}
-	% name and date
-	\vspace{1.25em}
-	\fontsize{10pt}{10pt}\selectfont
-	\theauthor \hspace{0.5cm} - \hspace{0.5cm} \thedate
-\end{center}
 
-%reset formatting
-\fontsize{11pt}{11pt}\selectfont
-\vspace{2em}
+	\backgroundsetup{position={current page.north west},vshift=-6cm,hshift=2cm,%
+	contents={\begin{picture}(0,0)
+	\put(0,0){\hbox{\includegraphics[height=4cm]{portrait}}}
+	\end{picture}}}%
+
+	\BgThispage%
+	\begin{flushright}
+		\fontsize{35pt}{35pt}\selectfont \textcolor{blue}{\theauthor \\}
+		\vspace{5mm}\fontsize{18pt}{18pt}\selectfont\textcolor{black}{\thetitle}\vspace{25mm}
+	\end{flushright}
 }
 
 \urlstyle{same}
@@ -31,14 +26,65 @@
 
 \renewcommand{\arraystretch}{2}
 
-\newcommand{\before}[1]{\reversemarginpar \marginpar{\raggedleft #1}}
+
+%----- custom commands ---------------------------------------------------------
+
+\def \const{2}
+
+\newcommand{\before}[1]{\reversemarginpar \marginpar{\raggedleft \fontfamily{qag}\selectfont #1}}
 \newcommand{\cvnote}[1]{\before{\textcolor{gray}{#1}}}
 
-\renewcommand{\sectionmark}[0]{\before{\textcolor{blue}{\rule{25mm}{5pt}}}}
+\renewcommand{\sectionmark}[0]{\before{\textcolor{blue}{\rule{35mm}{5pt}}}}
 
-\renewcommand{\section}[1]{\mbox{}\newline\textcolor{blue}{\fontsize{14pt}{14pt}\selectfont #1} \sectionmark}
-\renewcommand{\subsection}[1]{\textcolor{blue}{#1}}
+\renewcommand{\section}[1]{\mbox{}\newline\textcolor{blue}{\fontsize{14pt}{14pt}\selectfont \capitalisewords{#1}} \sectionmark}
+\renewcommand{\subsection}[1]{\fontsize{12pt}{12pt}\selectfont\textcolor{blue}{#1}}
 
-\newcommand{\cvitem}[3]{\mbox{} \hspace{-1ex} \cvnote{#1} #3 \ifx&#2&\else\textcolor{gray}{ \hspace{1ex}\rule[0.5ex]{2.5mm}{0.8px} \hspace{1ex} #2}\fi}
+\newcommandtwoopt{\cvitem}[3][][]{\mbox{} \hspace{-1ex} \cvnote{#1} #3 \ifx&#2&\else\textcolor{gray}{\fontsize{9pt}{9pt}\selectfont \newline #2}\fi}
 
-\newcommand{\cvscale}[2]{\mbox{} \newline \cvnote{#1} \vspace{-1ex} \hspace{-1ex} \textcolor{gray}{\rule[0.5ex]{\dimexpr #2\textwidth - 0.2\textwidth \relax}{1px} \hspace{-1.5ex} \textcolor{blue}{{\fontsize{16pt}{16pt}\selectfont \raisebox{-1pt}{$\bullet$}} \hspace{1ex} good\\}}}
+\newcommand{\cvswitch}[1]{
+	\ifnum #1=0
+ 		\cvscaleazero
+	\fi
+	\ifnum #1=1
+ 		\cvscaleaone
+	\fi
+	\ifnum #1=2
+ 		\cvscaleatwo
+	\fi
+	\ifnum #1=3
+ 		\cvscaleathree
+	\fi
+	\ifnum #1=4
+ 		\cvscaleafour
+	\fi
+	\ifnum #1=5
+ 		\cvscaleafive
+	\fi
+	\ifnum #1=6
+ 		\cvscaleasix
+	\fi
+	\ifnum #1=7
+ 		\cvscaleaseven
+	\fi
+	\ifnum #1=8
+ 		\cvscaleaeight
+	\fi
+	\ifnum #1=9
+ 		\cvscaleanine
+	\fi
+	\ifnum #1=10
+ 		\cvscaleaten
+	\fi
+}
+
+\newcommand{\cvscale}[2]{\mbox{} \newline \cvnote{#1} \vspace{-1ex} \hspace{-1ex} \textcolor{gray}{\rule[0.5ex]{#2\dimexpr 0.07\textwidth\relax}{1px}} \hspace{-1ex} \textcolor{blue}{{\fontsize{16pt}{16pt}\selectfont \raisebox{-1pt}{$\bullet$}} \cvswitch{#2} \\}}
+
+\newcommand{\cvbirth}[1]{\raisebox{\dimexpr 5.6mm - 11pt \relax}{#1} \rule{0pt}{5.6mm} \before{\includegraphics[height=7mm]{birth}}}
+
+\newcommand{\cvmail}[1]{\raisebox{\dimexpr 5.6mm - 11pt \relax}{#1} \rule{0pt}{5.6mm} \before{\includegraphics[height=7mm]{mail}}}
+
+\newcommand{\cvaddress}[1]{\raisebox{\dimexpr 5.6mm - 11pt \relax}{#1} \rule{0pt}{5.6mm} \before{\includegraphics[height=7mm]{address}}}
+
+\newcommand{\cvphone}[1]{\raisebox{\dimexpr 5.6mm - 11pt \relax}{#1} \rule{0pt}{5.6mm} \before{\includegraphics[height=7mm]{phone}}}
+
+\newcommand{\cvweb}[1]{\raisebox{\dimexpr 5.6mm - 11pt \relax}{#1} \rule{0pt}{5.6mm} \before{\includegraphics[height=7mm]{web}}}
