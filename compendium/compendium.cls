@@ -7,19 +7,21 @@
 \RequirePackage[T1]{fontenc}
 \RequirePackage[english,ngerman]{babel}
 \RequirePackage{graphicx}
-\RequirePackage{xcolor}
+\RequirePackage[table]{xcolor}
 \RequirePackage[a4paper]{geometry}
 \RequirePackage{caption}
 \RequirePackage{url}
+\RequirePackage{tabularx}
 
 % colors
 \definecolor{red}{rgb}{1,0.016,0.514}
 \definecolor{blue}{rgb}{0.16,0.514,1}
+\definecolor{white}{rgb}{1,1,1}
 
 % settings
 \pagestyle{plain}
 
-% custom formatting commands
+% custom formatting environments and commands
 \renewcommand\cite[1]{\iflanguage{ngerman}{(vgl. #1)}{(#1)}}
 
 \renewcommand\quote[2]{\iflanguage{ngerman}{>>#2<< (#1)}{>>#1<< (#2)}}
@@ -28,6 +30,36 @@
 \newcommand{\ct}[1]{\textbf{\textcolor{red}{#1}}}
 
 \newcommand{\mnote}[1]{\textsuperscript{*}\marginpar{\raggedright\fontsize{8pt}{8pt}\selectfont #1}}
+
+\newcommand{\specialenv}[3]{
+  \mbox{} \\
+  \mbox{} \\
+  \bgroup
+  \def\arraystretch{1}
+  \begin{tabularx}{\linewidth}{@{}>{\bfseries}l@{\hspace{1em}}X@{}}
+    {\fontsize{20}{20}\fontfamily{qhv}\selectfont\textcolor{#1}{#2}} & \vspace{-15pt} #3 \\
+  \end{tabularx}
+  \egroup
+  \mbox{} \\
+  \mbox{} \\
+}
+
+\newcommand{\definition}[1]{
+  \specialenv{blue}{D}{#1}
+}
+
+\newcommand{\experiment}[1]{
+  \specialenv{red}{V}{#1}
+}
+
+\newcommand{\description}[1]{
+  \specialenv{red}{B}{#1}
+}
+
+\newcommand{\explenation}[1]{
+  \specialenv{red}{E}{#1}
+}
+
 
 
 % custom environments and commands
