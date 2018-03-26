@@ -12,14 +12,33 @@
 \RequirePackage{caption}
 \RequirePackage{url}
 \RequirePackage{tabularx}
+\RequirePackage{bophook}
+\RequirePackage{ifthen}
+\RequirePackage{changepage}
 
 % colors
 \definecolor{red}{rgb}{1,0.016,0.514}
 \definecolor{blue}{rgb}{0.16,0.514,1}
 \definecolor{white}{rgb}{1,1,1}
 
-% settings
+% page-number formatting
 \pagestyle{plain}
+
+%\def \semester {0}
+%\def \topic {0}
+
+\AtBeginPage{%
+   \setlength{\unitlength}{1cm}
+   \checkoddpage
+   \ifthenelse{\boolean{oddpage}}{
+   \put(19, -2.5){\colorbox{blue}{\makebox(2,0.6){\textcolor{white}{\semester : \topic}}}}
+   }{
+   \put(0, -2.5){\colorbox{blue}{\makebox(2,0.6){\textcolor{white}{\semester : \topic}}}}
+   }
+}
+
+\let\oldchapter\chapter
+\renewcommand{\chapter}[3]{\oldchapter{#1} \def \semester {#2} \def \topic {#3}}
 
 % custom formatting environments and commands
 \renewcommand\cite[1]{\iflanguage{ngerman}{(vgl. #1)}{(#1)}}
@@ -50,14 +69,6 @@
 
 \newcommand{\experiment}[1]{
   \specialenv{red}{V}{#1}
-}
-
-\newcommand{\description}[1]{
-  \specialenv{red}{B}{#1}
-}
-
-\newcommand{\explenation}[1]{
-  \specialenv{red}{E}{#1}
 }
 
 
