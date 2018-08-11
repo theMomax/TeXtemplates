@@ -1,0 +1,163 @@
+BASIC COMPONENT Magnetpendel
+
+USE OF UNITS
+	TIMEUNIT = [s]
+
+DECLARATION OF ELEMENTS
+
+	CONSTANTS
+
+		#Naturkonstanten
+		g (REAL) := 9.81,              #Erdbeschleunigung [m/s^2]
+		pi (REAL) := 3.1415,           #Pi [1]
+		e0 (REAL) := 8.854E-12,        #epsilon0 [As^2/N * m^2]
+		eR (REAL) := 1.00059,          #epsilonR [1]
+		cw (REAL) := 0.45,             #Cw-Wert [1]
+		rho (REAL) := 1.2041,          #Dichte des Mediums [kg/m^3]
+
+		#Modellkonstanten
+		Accuracy (REAL) := 0.04,       #Genauigkeit der Abbruchbedingung
+
+		#konstante Eigenschaften von P
+		p_m (REAL) := 0.02,            #Masse des Pendelmagneten P [kg]
+		p_r (REAL) := 0.05,            #Radius von P [m]
+		p_q (REAL) := -4E-7,           #Ladung von P [As]
+
+		#Elektrostatische Kugel A:
+		a_q (REAL) := 4E-7,            #Ladung von A [As]
+		#--- Start --- Vektor a_p --------------------------------------------------
+		a_p_x (REAL) := 0,             #x Komponente der Position von A [m]
+		a_p_y (REAL) := -0.05,         #y Komponente der Position von A [m]
+		a_p_z (REAL) := -1.05,         #z Komponente der Position von A [m]
+		#--- Ende  --- Vektor a_p --------------------------------------------------
+
+		#Elektrostatische Kugel B:
+		b_q (REAL) := 4E-7,            #Ladung von A [As]
+		#--- Start --- Vektor b_p --------------------------------------------------
+		b_p_x (REAL) := 0,             #x Komponente der Position von B [m]
+		b_p_y (REAL) := 0.05,          #y Komponente der Position von B [m]
+		b_p_z (REAL) := -1.05          #z Komponente der Position von B [m]
+		#--- Ende  --- Vektor b_p --------------------------------------------------
+
+
+	STATE VARIABLES
+
+		TStop (REAL[s]) := 0[s],       #Markierung fuer Abbruchbedingung [s]
+		Result (INT) := 0              #Endzustand des Experiments [1]
+
+		CONTINUOUS
+
+		#Elektrostatische Kugel P:
+		#--- Start --- Vektor p_p --------------------------------------------------
+		p_p_x (REAL) := 0,             #x Komponente der Position von P [m]
+		p_p_y (REAL) := 0,             #y Komponente der Position von P [m]
+		p_p_z (REAL) := -1,            #z Komponente der Position von P [m]
+		#--- Ende  --- Vektor p_p --------------------------------------------------
+		#--- Start --- Vektor p_v --------------------------------------------------
+		p_v_x (REAL) := 0,             #x Komponente der Geschwindigkeit von P [m/s]
+		p_v_y (REAL) := 0,             #y Komponente der Geschwindigkeit von P [m/s]
+		p_v_z (REAL) := 0              #z Komponente der Geschwindigkeit von P [m/s]
+		#--- Ende  --- Vektor p_v --------------------------------------------------
+
+	DEPENDENT VARIABLES
+
+		CONTINUOUS
+
+		#--- Start --- Vektor p_fges -----------------------------------------------
+		p_fges_x (REAL) := 0,           #x Komponente von p_fges [N]
+		p_fges_y (REAL) := 0,           #y Komponente von p_fges [N]
+		p_fges_z (REAL) := 0,           #z Komponente von p_fges [N]
+		#--- Ende  --- Vektor p_fges -----------------------------------------------
+		#--- Start --- Vektor p_fres -----------------------------------------------
+		p_fres_x (REAL) := 0,           #x Komponente von p_fres [N]
+		p_fres_y (REAL) := 0,           #y Komponente von p_fres [N]
+		p_fres_z (REAL) := 0            #z Komponente von p_fres [N]
+		#--- Ende  --- Vektor p_fres -----------------------------------------------
+
+DYNAMIC BEHAVIOUR
+
+	#Abbruchueberpruefung
+
+	#Setze Timeout bei Naehe zum Magneten
+	ON ^((p_p_y > a_p_y - Accuracy) AND (p_p_y < a_p_y + Accuracy)) OR
+	((p_p_y > b_p_y - Accuracy) AND (p_p_y < b_p_y + Accuracy))^
+	DO
+	TStop^ := T;
+	END
+	#Ueberpruefe nach dem Timeout, ob Naehe noch vorhanden ist.
+	ON ^(TStop + 5[s] < T) AND ((p_p_y > a_p_y - Accuracy) AND
+	(p_p_y < a_p_y + Accuracy))^
+	DO
+	Result^ := 1;
+	SIGNAL STOP;
+	END
+	ON ^(TStop + 5[s] < T) AND ((p_p_y > b_p_y - Accuracy) AND
+	(p_p_y < b_p_y + Accuracy))^
+	DO
+	Result^ := 2;
+	SIGNAL STOP;
+	END
+
+	#Kraefteberechnung
+
+	#--- Start --- Kraefteberechnung von p_fges ---------------------------------
+	p_fges_x := (p_m * g * 0) + 0.5 * SQE(p_r) * pi * cw * rho *
+	SQRT((SQE(p_v_x) + SQE(p_v_y) + SQE(p_v_z))) * (-1 * p_v_x) + (((p_q)/
+	(4 * pi * e0 * eR)) * (((a_q * (p_p_x - a_p_x))/
+	(POW(SQRT(SQE(p_p_x - a_p_x) + SQE(p_p_y - a_p_y) +
+	SQE(p_p_z - a_p_z)),3))) + ((b_q * (p_p_x - b_p_x))/
+	(POW(SQRT(SQE(p_p_x - b_p_x) + SQE(p_p_y - b_p_y) +
+	SQE(p_p_z - b_p_z)),3)))));
+
+	p_fges_y := (p_m * g * 0) + 0.5 * SQE(p_r) * pi * cw * rho *
+	SQRT(SQE(p_v_x) + SQE(p_v_y) + SQE(p_v_z)) * (-1 * p_v_y) + (((p_q)/
+	(4 * pi * e0 * eR)) * (((a_q * (p_p_y - a_p_y))/
+	(POW(SQRT(SQE(p_p_x - a_p_x) + SQE(p_p_y - a_p_y) +
+	SQE(p_p_z - a_p_z)),3))) + ((b_q * (p_p_y - b_p_y))/
+	(POW(SQRT(SQE(p_p_x - b_p_x) + SQE(p_p_y - b_p_y) +
+	SQE(p_p_z - b_p_z)),3)))));
+
+	p_fges_z := (p_m * g * (-1)) + 0.5 * SQE(p_r) * pi * cw * rho *
+	SQRT(SQE(p_v_x) + SQE(p_v_y) + SQE(p_v_z)) * (-1 * p_v_z) + (((p_q)/
+	(4 * pi * e0 * eR)) * (((a_q * (p_p_z - a_p_z))/
+	(POW(SQRT(SQE(p_p_x - a_p_x) + SQE(p_p_y - a_p_y) +
+	SQE(p_p_z - a_p_z)),3))) + ((b_q * (p_p_z - b_p_z))/
+	(POW(SQRT(SQE(p_p_x - b_p_x) + SQE(p_p_y - b_p_y) +
+	SQE(p_p_z - b_p_z)),3)))));
+	#--- Ende  --- Vektor Kraefteberechnung von p_fges --------------------------
+
+	#--- Start --- Vektor Kraefteberechnung von p_fres --------------------------
+	p_fres_x := p_fges_x - (((p_fges_x * p_p_x + p_fges_y * p_p_y +
+	p_fges_z * p_p_z)/(SQE(p_p_x) + SQE(p_p_y) + SQE(p_p_z))) * p_p_x) +
+	(p_m * (SQE(p_v_x) + SQE(p_v_y) + SQE(p_v_z)) *
+	((-1 * p_p_x)/(SQE(p_p_x) + SQE(p_p_y) + SQE(p_p_z))));
+
+	p_fres_y := p_fges_y - (((p_fges_x * p_p_x + p_fges_y * p_p_y +
+	p_fges_z * p_p_z)/(SQE(p_p_x) + SQE(p_p_y) + SQE(p_p_z))) * p_p_y) +
+	(p_m * (SQE(p_v_x) + SQE(p_v_y) + SQE(p_v_z)) *
+	((-1 * p_p_y)/(SQE(p_p_x) + SQE(p_p_y) + SQE(p_p_z))));
+
+	p_fres_z := p_fges_z - (((p_fges_x * p_p_x + p_fges_y * p_p_y +
+	p_fges_z * p_p_z)/(SQE(p_p_x) + SQE(p_p_y) + SQE(p_p_z))) * p_p_z) +
+	(p_m * (SQE(p_v_x) + SQE(p_v_y) + SQE(p_v_z)) *
+	((-1 * p_p_z)/(SQE(p_p_x) + SQE(p_p_y) + SQE(p_p_z))));
+	#--- Ende  --- Vektor Kraefteberechnung von p_fres --------------------------
+
+
+	DIFFERENTIAL EQUATIONS
+
+	#--- Start --- Geschwindigkeitsberechnung von P -----------------------------
+	p_v_x' := p_fres_x / p_m;
+	p_v_y' := p_fres_y / p_m;
+	p_v_z' := p_fres_z / p_m;
+	#--- Ende  --- Geschwindigkeitsberechnung von P -----------------------------
+
+	#--- Start --- Positionsberechnung von P ------------------------------------
+	p_p_x' := p_v_x;
+	p_p_y' := p_v_y;
+	p_p_z' := p_v_z;
+	#--- Ende  --- Positionsberechnung von P ------------------------------------
+
+END
+
+END OF Magnetpendel

@@ -21,11 +21,11 @@
 \definecolor{blue}{rgb}{0.16,0.514,1}
 \definecolor{white}{rgb}{1,1,1}
 
+% no indent
+\setlength\parindent{0pt}
+
 % page-number formatting
 \pagestyle{plain}
-
-%\def \semester {0}
-%\def \topic {0}
 
 \AtBeginPage{%
    \setlength{\unitlength}{1cm}
@@ -52,14 +52,12 @@
 
 \newcommand{\specialenv}[3]{
   \mbox{} \\
-  \mbox{} \\
   \bgroup
   \def\arraystretch{1}
   \begin{tabularx}{\linewidth}{@{}>{\bfseries}l@{\hspace{1em}}X@{}}
     {\fontsize{20}{20}\fontfamily{qhv}\selectfont\textcolor{#1}{#2}} & \vspace{-15pt} #3 \\
   \end{tabularx}
   \egroup
-  \mbox{} \\
   \mbox{} \\
 }
 

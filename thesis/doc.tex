@@ -1,0 +1,96 @@
+\documentclass[11pt,journal,compsoc,a4paper]{IEEEtran}      
+% import packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman, english]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage[backend=bibtex,style=numeric-comp]{biblatex}
+\usepackage{url}
+\usepackage{esvect}
+\usepackage[colorlinks=true,urlcolor=black,linkcolor=black,citecolor=black]{hyperref}
+\usepackage{float}
+\usepackage[caption = false]{subfig}
+\usepackage[final]{pdfpages}
+
+% selfmade style package
+\usepackage{style}
+
+% presets and declaration of environments
+
+\graphicspath{ {./img/} }
+\setkeys{Gin}{width=\linewidth}
+
+\bibliography{bibliography.bib}
+
+\definecolor{background}{rgb}{0.9,0.9,0.9}
+
+\lstset {
+    xleftmargin=2mm,
+    breaklines=true,
+    basicstyle=\fontfamily{pcr}\selectfont\linespread{1.5}\scriptsize\color{black},
+    keywordstyle=\color{black}\bfseries,
+    numbers=none,
+    backgroundcolor=\color{background},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=l,
+    framesep=2mm,
+    fillcolor=\color{background},
+    rulecolor=\color{background}
+}
+
+% document
+    
+\begin{document}
+\selectlanguage{ngerman}
+\newgeometry{top=1.75cm,bottom=1.75cm,inner=3cm,outer=1.5cm}
+\pagenumbering{gobble}
+\onecolumn
+\input{tex/title}
+\linespread{1}
+\selectfont
+\input{tex/abstract}
+\vspace{3em}
+\linespread{1}
+\selectfont
+\tableofcontents
+\pagebreak
+\listoffigures
+\listofcodes
+\input{tex/notes}
+\clearpage
+
+\pagenumbering{arabic}
+\twocolumn
+\linespread{1}
+\selectfont
+
+\input{tex/aufbau}
+\input{tex/herleitung}
+\input{tex/modellbeschreibung}
+\input{tex/experimente}
+
+\onecolumn
+
+% Bibliography:
+\clearpage
+\addcontentsline{toc}{section}{Literatur}
+\printbibliography
+
+%appendix
+\clearpage
+\appendix
+\input{tex/anhang}
+\newpage
+\includepdf[pages={-}]{img/signature.pdf}
+
+\end{document}

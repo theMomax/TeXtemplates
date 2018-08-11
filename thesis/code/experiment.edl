@@ -1,0 +1,40 @@
+EXPERIMENT DefaultExp
+
+DECLARATION OF VARIABLES
+ runCount (INT) := 1,       # Anzahl der Modelllaeufe [1]
+ x (REAL) := 0,             # x-Koordinate des aktuellen Punkts [m]
+ y (REAL) := 0,             # y-Koordinate des aktuellen Punkts [m]
+ l (REAL) := 1,             # Laenge der Verbindungsstange [m]
+ result (INT):= 0           # Ergebnis des Modelllaufs [1]
+
+BODY OF EXPERIMENT
+
+# Generieren eines Modelllaufs
+CREXP Magnetpendel;
+CRRUN Run, Magnetpendel;
+SETCTRL StepSize, 0.01;
+SETCTRL StepMax, 0.01;
+
+# Veraenderung des aktuellen Punkts
+FOR i FROM 0 TO 50 REPEAT
+    x := i / 100;
+    FOR j FROM 0 TO 50 REPEAT
+        y := j / 100;
+        # Zuruecksetzen des letzten Modelllaufs
+        IF runCount > 1 DO
+          SELRUN Run;
+          RESETRUN Run;
+        END
+        # Zuweisung der Startposition
+        <p_p_x> := x;
+        <p_p_y> := y;
+        <p_p_z> := -SQRT(SQE(l) - SQE(y) - SQE(x));
+        # Durchfuehrung des Modelllaufs
+        SIMULATE TO, 600;
+        # Abfrage und Ausgabe des Ergebnisses 
+        result := <Result>;
+        DISPLAY("$Data / %lg / %lg / %d \n", x, y, result);
+        runCount := runCount + 1;
+    END LOOP
+END LOOP
+END OF DefaultExp

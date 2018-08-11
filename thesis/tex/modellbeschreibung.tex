@@ -1,0 +1,41 @@
+\section{Erstellung der Modellbeschreibung}
+\label{sec:erstellung_der_modellbeschreibung}
+
+Da bei der Umsetzung eines Magnetpendels zu MDL-Code keine mobilen Komponenten benötigt werden, reicht eine einzige Basiskomponente zur Umsetzung dieses Projekts aus. Deren Programmcode ist im Codebeispiel \ref{code:mdl-modellbeschreibungscode} zu finden.
+
+\subsection{Die Umsetzung der Vektoren}
+\label{ssec:die_umsetzung_der_vektoren}
+
+Simplex3 bietet keine Unterstützung von vektoriellen Variablen, was dazu führt, dass jeder Vektor aus einzelnen skalaren Variablen für jede Dimension modelliert werden muss. Wie im Codebeispiel \ref{code:modellierung_des_geschwindigkeitsvektors} zu sehen ist, sind diese Einzelvariablen in eine Kommentarstruktur eingefasst, um ihre Zusammengehörigkeit zu verdeutlichen. Die Benennung der Einzelvariablen eines Vektors unterliegt folgendem Muster: \ilcforcebreak{<Bezugsobjekt>\_<Objektgroesse>\_<Betragsrichtung>}. Im Beispiel handelt es sich also um den Geschwindigkeitsvektor des Pendelmagneten. Die erste Variable stellt dabei dessen Betrag in x-Richtung dar.
+
+\begin{code*}
+\lstinputlisting[firstline=56,lastline=60]{code/ausgangspunkt-noindent.mdl}
+	\caption{Modellierung des Geschwindigkeitsvektors}
+	\label{code:modellierung_des_geschwindigkeitsvektors}
+\end{code*}
+
+\subsection{Die Umsetzung physikalischer Einheiten}
+\label{ssec:die_umsetzung_physikalischer_einheiten}
+
+Die Syntax der Model Description Language von Simplex3 bietet die Möglichkeit, Variablen Einheiten zuzuordnen, sodass automatisch zwischen unterschiedlichen Maßeinheiten umgerechnet werden kann. Zudem bietet diese Möglichkeit den Vorteil, dass eventuell auftretende Fehler in Formeln schneller erkannt werden können, wenn sich eine Inkompatibilität der Einheiten ergibt, weil dies als Fehler ausgegeben wird. Jedoch werden durch die Angabe der Einheiten die im Code vorkommenden Formeln deutlich länger und vor allem unlesbarer, da Simplex3 maximal 80 Zeichen pro Codezeile zulässt. Bis auf Zeitvariablen, die in Sekunden angegeben werden, da die MDL-Syntax bei diesen eine Einheit verlangt, haben deshalb alle Variablen die Einheit $1$. Dies erfordert die Konvention, dass alle Variablen in ihrer SI-Basiseinheit geführt werden, welche als Hilfestellung für jede Variable angegeben ist. Zu finden ist die Angabe im Kommentarbereich hinter der zugehörigen Variable. 
+
+\subsection{Die Abbruchbedingung}
+\label{ssec:die_abbruchbedingung}
+
+Um in Experimenten mit einer hohen Anzahl an Modelldurchläufen Rechenzeit einzusparen, ist das Modell mit einer Abbruchbedingung ausgestattet, welche im Codebeispiel \ref{code:implementierung_der_abbruchbedingung} abgebildet ist. Die Abbruchbedingung beendet den Modelllauf, sobald sich der Pendelmagnet über eine gewisse Dauer im unmittelbaren Umfeld eines der Fixmagnete aufgehalten hat. Konkret heißt das, dass sich der Pendelmagnet über eine Zeit von fünf Sekunden nicht weiter in y-Richtung von einem der Fixmagnete entfernen darf, als es in der Variable \ilc{Accuracy}, die die Genauigkeit der Abbruchüberprüfung angibt, festgelegt ist. Dabei ist nur die y-Richtung von Belang, da die Fixmagnete in x-Richtung ohnehin auf der Ruheposition des Pendelmagneten liegen. Wird der Lauf abgebrochen, so hält die Abbruchbedingung sein Ergebnis, also die Endposition des Pendelmagneten in der Variable \ilc{Result} fest. Dabei steht der Wert $1$ dafür, dass sich der Pendelmagnet über dem Fixmagneten $A$ eingependelt hat, während $2$ das Äquivalent für Magnet $B$ darstellt. Endet das Modell nicht durch das Eintreten der Abbruchbedingung, sondern weil die im Experiment festgelegte Maximallaufzeit verstreicht, so bleibt die Variable \ilc{Result} auf dem Initialwert $0$. Dieser Fall tritt ein, wenn die Startposition des Pendelmagneten direkt zwischen den Fixmagneten, also auf der Mittelsenkrechte der Strecke $[AB]$, liegt.
+
+Umgesetzt ist diese Abbruchbedingung über die in Simplex-MDL verfügbaren ON-Events. Diese werden nur dann ausgelöst, wenn die nach dem \ilc{ON} gegebene Bedingung vom Zustand \ilc{false} auf \ilc{true} wechselt, jedoch nicht, wenn im vorherigen Rechenzyklus die Bedingung bereits erfüllt war. In Zeile sieben des Codebeispiels \ref{code:implementierung_der_abbruchbedingung} wird die Hilfsvariable \ilc{TStop} dann auf die aktuelle Modellzeit \ilc{T} gesetzt, wenn der Pendelmagnet gerade in das unmittelbare Umfeld eines der Fixmagneten eintritt. In den folgenden ON-Events wird für jeden der Fixmagnete überprüft, ob nach dem Ablaufen der fünf Sekunden seit dem Setzen der Variable \ilc{TStop} die Nähe zum Pendelmagnet noch vorhanden ist. Ist dies der Fall, so wird das Ergebnis des Modelllaufs entsprechend gesetzt und die Simulation beendet.
+
+\begin{code*}
+	\lstinputlisting[firstline=78,lastline=98]{code/ausgangspunkt-noindent.mdl}
+	\caption{Implementierung der Abbruchbedingung}
+	\label{code:implementierung_der_abbruchbedingung}
+\end{code*}
+Wäre der Pendelmagnet vor dem Verstreichen der fünf Sekunden aus der Umgebung des Fixmagneten aus- und wieder in die Umgebung eines der Fixmagneten eingetreten, so wäre beim Wiedereintritt die Variable \ilc{TStop} neu gesetzt worden, sodass die unteren beiden Abfragen nicht ausgelöst würden, obwohl die ortsspezifische Bedingung erfüllt ist, da die zur Erfüllung der  zeitspezifischen Anforderung nötige Simulationszeit \ilc{T > TStop + 5[s]} noch nicht erreicht ist.
+
+\subsection{Der Aufbau des MDL-Codes}
+\label{ssec:der_aufbau_des_mdl-codes}
+
+\paragraph{Variablendeklaration} Zur Umsetzung der in Abschnitt \ref{sec:herleitung_der_modelldynamik} hergeleiteten Modelldynamik sind in Simplex-MDL, der Modellbeschreibungssprache von Simplex3, mehrere Typen an Variablen notwendig, welche im Teilbereich \ilc{DECLARATION OF ELEMENTS} deklariert werden. Sämtliche Natur- und Modellkonstanten, sowie die Positionen der unbeweglichen Fixmagneten $A$ und $B$ werden als Konstanten im entsprechenden Bereich \ilc{CONSTANTS} definiert. Die Hilfsvariablen der Abbruchbedingung \ilc{TStop} und \ilc{Result} sowie Position und Geschwindigkeit des Pendelmagneten sind als Zustandsvariablen unter \ilc{STATE VARIABLES} gelistet. Dabei haben die beiden Letzteren den Zusatz \ilc{CONTINUOUS}, sodass sie über die im Teilabschnitt \ref{ssec:die_differentialgleichungen} genannten Differentialgleichungen verändert werden können. Im Gegensatz dazu stehen die Variablen für die Kraftvektoren, die fortlaufend über eine direkte Wertzuweisung verändert werden. Dies verlangt nach einer Deklaration im Bereich der \ilc{DEPENDENT VARIABLES} im Abschnitt \ilc{CONTINUOUS}. Die Teilkraft $\vec{F}_{ges}$ ist neben der resultierend auf den Pendelmagneten wirkenden Kraft $\vec{F}_{res}$ der einzige Kraftvektor, der im Modellcode als Variable abgespeichert wird, während alle anderen Teilkräfte ohne Zwischenspeicherung in der Wertzuweisung berechnet werden. Dieses Vorgehen ist ressourcensparend, da nur die Teilkraft $\vec{F}_{ges}$ mehrfach in der Berechnung der resultierenden Kraft $\vec{F}_{res}$ vorkommt. Desweiteren muss keine der Teilkräfte in nachfolgenden Experimenten observiert werden, was ohne das Abspeichern dieser nicht möglich wäre.
+
+\paragraph{Dynamik} Die Modelldynamik im Teilbereich \ilc{DYNAMIK BEHAVIOUR} des MDL-Codes enthält neben der Abbruchbedingung zunächst die Berechnung der Kraftvektoren $\vec{F}_{ges}$ und $\vec{F}_{res}$ mithilfe der vollständig aufgelösten Formeln \eqref{f_ges} und \eqref{f_res}. Im Abschnitt \ilc{DIFFERENTIAL EQUATIONS} folgt schließlich die Implementierung der Differentialgleichungen für Geschwindigkeit \eqref{v} und Ort \eqref{p} in Kombination mit der Formel \eqref{a} für die Berechnung der Beschleunigung.

@@ -1,0 +1,37 @@
+\let\origparagraph\paragraph
+\let\endorigparagraph\endparagraph
+\renewcommand{\paragraph}[1]{\origparagraph*{\textbf{#1}}}
+
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+
+\renewenvironment{figure}[1][tbph]{%
+    \origfigure[#1]%
+    \centering
+}{%
+    \endorigfigure
+}
+
+\newcommand{\todo}[1]{}
+
+\newcommand{\cvec}[3]{\begin{pmatrix} #1 \\ #2 \\ #3 \end{pmatrix}}
+
+\setlength{\parindent}{0pt}
+
+\newcommand{\comp}[1]{(vgl. \cite{#1})}
+
+%\renewcommand{\abstract}{\textbf{Abstract}}
+
+\renewcommand{\vec}[1]{\vv{#1}}
+
+\renewcommand{\quote}[1]{\glqq #1\grqq}
+
+\DeclareCaptionType{code}[Programmcode][Programmcodeverzeichnis]
+
+\newcommand{\ilc}[1]{\texttt{#1}}
+
+\newcommand{\ilcforcebreak}[1]{\texttt{\nolinkurl{#1}}}
+
+\newcommand{\pa}{(a) }
+\newcommand{\pb}{(b) }
+\newcommand{\pc}{(c) }
